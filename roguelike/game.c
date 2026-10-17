@@ -1,11 +1,32 @@
 #include <ncurses.h>
+#include <stdbool.h>
+#include <stdint.h>
 
-int main(void){
-    initscr();
+typedef int64_t i64;
 
-    mvprintw(LINES/2, COLS/2, "hello world");
 
+
+
+void game_loop(){
+    char player = '@';
+    i64 player_y = LINES/2;
+    i64 player_x = COLS/2;
+    mvaddch(player_y,player_x, player);
     getch();
+
+
+}
+
+
+int main(){
+
+    initscr();
+    curs_set(0);
+    noecho();
+    keypad(stdscr, TRUE);
+
+    game_loop();
+
 
     endwin();
 
