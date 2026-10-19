@@ -1,22 +1,11 @@
-#include <ncurses.h>
+
 #include <stdbool.h>
-#include <stdint.h>
 
-typedef int64_t i64;
+#include "game.h"
 
+void game_loop(void);
 
-
-
-void game_loop(){
-    char player = '@';
-    i64 player_y = LINES/2;
-    i64 player_x = COLS/2;
-    mvaddch(player_y,player_x, player);
-    getch();
-
-
-}
-
+Game* game;
 
 int main(){
 
@@ -25,11 +14,45 @@ int main(){
     noecho();
     keypad(stdscr, TRUE);
 
+
+    game = game_init();
     game_loop();
+    game_destroy(game);
 
 
     endwin();
 
     return 0;
     
+}
+
+
+void game_loop(void){
+
+    Actor* player = &game->player;
+
+    int ch;
+    while ((ch = getch())){
+
+        clear();
+
+        bool game_over = false;
+
+        switch(ch){
+            case 'q': game_over = true; break;
+            case KEY_UP: --player->y; break;
+            case KEY_DOWN: ++player->y; break;
+            case KEY_LEFT: --player->x; break;
+            case KEY_RIGHT: ++player->x; break;
+
+        }
+
+        mvaddch(player->y,player->x, player->sym);
+        refresh();
+
+        if (game_over == true){
+            break;
+        }
+    }
+
 }
